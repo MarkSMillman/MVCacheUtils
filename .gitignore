@@ -24,3 +24,4 @@ hs_err_pid*
 /MVCacheUtils/target/maven-archiver
 /MVCacheUtils/target/surefire
 /MVCacheUtils/target/test-classes
+/MVCacheUtils/target/MVCacheUtils-1.0-SNAPSHOT.jar
