@@ -1,0 +1,10 @@
+{
+    "user": "admin",
+    "password": "welcome1",
+    "serverUrl": "http://localhost:8080/mapviewer",
+    "adminUrl": "http://localhost:8080/mapviewer/oms",
+    "mcsAdminUrl": "http://localhost:8080/mapviewer/mcsadmin",
+    "dataSource": "MVDEMO",
+    "cacheName" : "DEMO_MAP",
+    "level" : "0,2-4"
+}
