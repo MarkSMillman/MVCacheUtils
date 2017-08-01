@@ -202,6 +202,15 @@ public class CacheUtils {
                 ilevels[i] = levels.get(i).intValue();
             }
         }
+        
+        if ( adminUrl == null || adminUrl.length() == 0) {
+            // I'm not sure if this is correct remains to be tested msm
+            adminUrl = serverUrl + "/" + "oms";
+        }
+        if ( mcsAdminUrl == null || mcsAdminUrl.length() == 0) {
+            mcsAdminUrl = serverUrl + "/" + "mcsadmin";
+        }
+        
         MapCacheTools tool = new MapCacheTools(user, password, serverUrl, mcsAdminUrl, adminUrl, dataSource);
         String response = null;
         if (mode.startsWith("clear")) {
