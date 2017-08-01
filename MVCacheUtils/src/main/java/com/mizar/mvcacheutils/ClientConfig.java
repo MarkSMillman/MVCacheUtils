@@ -11,13 +11,17 @@
   * License is granted to use this source code to maintain or extend software
   * originally developed by MIZAR, LLC or an associated company.
   *
-  * The Mizar Framework is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
   *
-  * You may NOT remove this copyright notice; it must be retained in any modified 
+  * You may NOT remove this copyright notice; it must be retained in any modified
   * version of the software.
-  */
+ */
 package com.mizar.mvcacheutils;
 
 import org.apache.commons.lang3.StringUtils;

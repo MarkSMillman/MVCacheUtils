@@ -1,7 +1,5 @@
-package com.mizar.mvcacheutils;
-
 /*
-  * Copyright 2008, 2009, 2010, 2014 Mizar, LLC
+  * Copyright 2008, 2009, 2010, 2014, 2017 Mizar, LLC
   * 9908 Alegria Drive,
   * Las Vegas, NV, 98281, U.S.A.
   * All Rights Reserved.
@@ -13,16 +11,23 @@ package com.mizar.mvcacheutils;
   * License is granted to use this source code to maintain or extend software
   * originally developed by MIZAR, LLC or an associated company.
   *
-  * The Mizar Framework is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
   *
   * You may NOT remove this copyright notice; it must be retained in any modified
   * version of the software.
  */
+package com.mizar.mvcacheutils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +52,7 @@ import org.jdom.JDOMException;
 
 public class MapCacheTools {
 
-    private static Log getLogger() {
+    private static Log getLogger() {           
         return LogFactory.getLog(MapCacheTools.class.getName());
     }
 
@@ -85,6 +90,7 @@ public class MapCacheTools {
         this.mcsAdminUrl = mcsAdminUrl;
         this.adminUrl = adminUrl;
         this.dataSource = dataSource;
+        getLogger();
     }
 
     /**
@@ -593,7 +599,11 @@ public class MapCacheTools {
                 }
             } catch (HttpException httpe) {
                 getLogger().error(httpe.getLocalizedMessage());
-            }
+            } catch (ConnectException ce) {
+                response = ce.getLocalizedMessage() + " to " + mcsAdminUrl + "failed";
+            } catch (Exception e) {
+                response = e.getLocalizedMessage();
+            }          
         } finally {
             if (postMethod != null) {
                 postMethod.releaseConnection();
@@ -644,10 +654,11 @@ public class MapCacheTools {
         String response = "";
 
         try {
-            System.out.println(requests.get(0));
+            //System.out.println(requests.get(0));
             response = sendRequests(url, requests);
         } catch (IOException ex) {
             Logger.getLogger(MapCacheTools.class.getName()).log(Level.SEVERE, null, ex);
+            response = ex.getLocalizedMessage();
         }
 
         return response;

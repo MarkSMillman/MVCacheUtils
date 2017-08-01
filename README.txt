@@ -44,6 +44,9 @@ The messages sent to the Map Cache Server changed between 11c and 12g and only t
 as of August 1, 2017.  More problematically the response to any request appears to be "not enough parameters for the REST request".
 I expect that the solution is to modify MapCacheTools.sendRequests to package the request in a REST wrapper.  Life used to be simpler.
 
+AND ... the HttpClient instantiation in the third line of MapCacheTools.sendRequests is emitting some log4j WARN message.
+I need to sort this out too.
+
 Mark Millman
 mark.millman@mizar.com
  
