@@ -37,5 +37,14 @@ The command line may be as follows
 
 If no parameter file is provided the application looks for a default parameters file MVCacheUtils.json
 in the current folder.  Command line arguments override any parameter file arguments.
+
+DEVELOPER NOTES:
+
+The messages sent to the Map Cache Server changed between 11c and 12g and only the CLEAR messages have been updated
+as of August 1, 2017.  More problematically the response to any request appears to be "not enough parameters for the REST request".
+I expect that the solution is to modify MapCacheTools.sendRequests to package the request in a REST wrapper.  Life used to be simpler.
+
+Mark Millman
+mark.millman@mizar.com
  
  
