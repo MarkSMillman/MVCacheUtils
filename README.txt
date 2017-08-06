@@ -40,6 +40,9 @@ in the current folder.  Command line arguments override any parameter file argum
 
 DEVELOPER NOTES:
 
+The Netbeans project requires Maven and a number of jars for which there is no Maven repository.  There is a folder called ExternalJars that 
+contain these missing Jars.  They can be loaded to your local Maven .m2 repository by running the _reposAll.cmd script in the ExternalJars folder.
+
 The messages sent to the Map Cache Server changed between 11c and 12g and only the CLEAR messages have been updated
 as of August 1, 2017.  More problematically the response to any request appears to be "not enough parameters for the REST request".
 I expect that the solution is to modify MapCacheTools.sendRequests to package the request in a REST wrapper.  Life used to be simpler.
