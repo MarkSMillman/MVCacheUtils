@@ -44,12 +44,12 @@ public class CacheUtils {
         String[] sLevelList = sLevelRanges.split(",");
         for (String sLevelRange : sLevelList) {
             String[] sLevels = sLevelRange.split("-");
-            if ( sLevels.length == 1 ) {
+            if (sLevels.length == 1) {
                 ilevels.add(Integer.valueOf(sLevels[0]));
             } else {
                 int start = Integer.valueOf(sLevels[0]).intValue();
                 int end = Integer.valueOf(sLevels[1]).intValue();
-                for ( int i=start; i<= end; i++) {
+                for (int i = start; i <= end; i++) {
                     ilevels.add(i);//new Integer(i));
                 }
             }
@@ -73,6 +73,7 @@ public class CacheUtils {
         String cacheName = null;
         List<Integer> levels = null;
         double[] corners = null;
+        boolean debug = false;
 
         for (String arg : args) {
             String[] kv = arg.split("=");
@@ -82,11 +83,11 @@ public class CacheUtils {
         }
 
         BufferedReader br = null;
-
+        String defaultJson = null;
         if (parameterFile == null) {
             try {
                 String currentDir = System.getProperty("user.dir");
-                String defaultJson = currentDir + "\\" + "MVCacheUtils.json";
+                defaultJson = currentDir + "\\" + "MVCacheUtils.json";
                 FileReader fr = new FileReader(defaultJson);
                 br = new BufferedReader(fr);
                 if (br != null) {
@@ -171,6 +172,8 @@ public class CacheUtils {
             String[] kv = arg.split("=");
             if (kv[0].toLowerCase().startsWith("mode")) {
                 mode = kv[1];
+            } else if (kv[0].toLowerCase().startsWith("deb")) {
+                debug = Boolean.valueOf(kv[1]);
             } else if (kv[0].toLowerCase().startsWith("u")) {
                 user = kv[1];
             } else if (kv[0].toLowerCase().startsWith("pas")) {
@@ -206,16 +209,17 @@ public class CacheUtils {
                 ilevels[i] = levels.get(i).intValue();
             }
         }
-        
-        if ( adminUrl == null || adminUrl.length() == 0) {
+
+        if (adminUrl == null || adminUrl.length() == 0) {
             // I'm not sure if this is correct remains to be tested msm
             adminUrl = serverUrl + "/" + "oms";
         }
-        if ( mcsAdminUrl == null || mcsAdminUrl.length() == 0) {
+        if (mcsAdminUrl == null || mcsAdminUrl.length() == 0) {
             mcsAdminUrl = serverUrl + "/" + "mcsadmin";
         }
-        
+
         MapCacheTools tool = new MapCacheTools(user, password, serverUrl, mcsAdminUrl, adminUrl, dataSource);
+        tool.setDebug(debug);
         String response = null;
         if (mode.startsWith("clear")) {
             if (corners == null) {
@@ -236,7 +240,7 @@ public class CacheUtils {
                 response = tool.prefetchCache(cacheName, ilevels, corners);
             }
         }
-        if ( response != null ) {
+        if (response != null) {
             System.out.println(response);
         }
     }

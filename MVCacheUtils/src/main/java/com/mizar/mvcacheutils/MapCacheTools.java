@@ -52,7 +52,7 @@ import org.jdom.JDOMException;
 
 public class MapCacheTools {
 
-    private static Log getLogger() {           
+    private static Log getLogger() {
         return LogFactory.getLog(MapCacheTools.class.getName());
     }
 
@@ -68,6 +68,7 @@ public class MapCacheTools {
     private int estimatedTileRemaining;
     private int estimatedTimeRemaining;
     private int estimatedDiskSpaceRequired;
+    private boolean debug = false;
 
     private String createCacheInstance
             = "<create_cache_instance data_source='mvdemo'>" + "<cache_instancename='demo_map' image_format='PNG'><internal_map_source base_map='demo_map'/>"
@@ -276,7 +277,10 @@ public class MapCacheTools {
      * request
      */
     public String prefetchCache(String cacheName, int level) {
-        String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "'/>");
+        int[] levels = new int[1];
+        levels[0] = level;
+        //String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "'/>");
+        String request = wrap(tileAdminTask("fetch_tiles", cacheName, levels, null));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -295,7 +299,10 @@ public class MapCacheTools {
      * request
      */
     public String prefetchCache(String cacheName, int level, double[] ordinates) {
-        String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        int[] levels = new int[1];
+        levels[0] = level;
+        //String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        String request = wrap(tileAdminTask("fetch_tiles", cacheName, levels, ordinates));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -310,7 +317,8 @@ public class MapCacheTools {
      * request
      */
     public String prefetchCache(String cacheName, int[] levels) {
-        String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "'/>");
+        //String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "'/>");
+        String request = wrap(tileAdminTask("fetch_tiles", cacheName, levels, null));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -329,7 +337,8 @@ public class MapCacheTools {
      * request
      */
     public String prefetchCache(String cacheName, int[] levels, double[] ordinates) {
-        String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        //String request = wrap("<prefetch_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        String request = wrap(tileAdminTask("fetch_tiles", cacheName, levels, ordinates));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -344,7 +353,10 @@ public class MapCacheTools {
      * request
      */
     public String refreshCache(String cacheName, int level) {
-        String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "'/>");
+        //String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "'/>");
+        int[] levels = new int[1];
+        levels[0] = level;
+        String request = wrap(tileAdminTask("refresh_tiles", cacheName, levels, null));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -363,7 +375,10 @@ public class MapCacheTools {
      * request
      */
     public String refreshCache(String cacheName, int level, double[] ordinates) {
-        String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        //String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(level) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        int[] levels = new int[1];
+        levels[0] = level;
+        String request = wrap(tileAdminTask("refresh_tiles", cacheName, levels, ordinates));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -378,7 +393,8 @@ public class MapCacheTools {
      * request
      */
     public String refreshCache(String cacheName, int[] levels) {
-        String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "'/>");
+        // String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "'/>");
+        String request = wrap(tileAdminTask("refresh_tiles", cacheName, levels, null));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -397,7 +413,8 @@ public class MapCacheTools {
      * request
      */
     public String refreshCache(String cacheName, int[] levels, double[] ordinates) {
-        String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        //String request = wrap("<refresh_cache map_cache_name='" + getMapCache(cacheName) + "' zoom_levels='" + getLevels(levels) + "' bounding_box='" + getRange(ordinates) + "'/>");
+        String request = wrap(tileAdminTask("refresh_tiles", cacheName, levels, ordinates));
         return sendRequest(getMcsAdminUrl(), request);
     }
 
@@ -524,6 +541,11 @@ public class MapCacheTools {
         HttpClient httpclient = new HttpClient();
         PostMethod reqPost = null;
         PostMethod postMethod = null;
+        if (debug) {
+            for (String request : requests) {
+                System.out.println(request);
+            }
+        }
         try {
             httpclient.getHttpConnectionManager().getParams().setConnectionTimeout(30000);
             httpclient.setState(initialState);
@@ -603,7 +625,7 @@ public class MapCacheTools {
                 response = ce.getLocalizedMessage() + " to " + mcsAdminUrl + "failed";
             } catch (Exception e) {
                 response = e.getLocalizedMessage();
-            }          
+            }
         } finally {
             if (postMethod != null) {
                 postMethod.releaseConnection();
@@ -654,7 +676,7 @@ public class MapCacheTools {
         String response = "";
 
         try {
-            //System.out.println(requests.get(0));
+            System.out.println(requests.get(0));
             response = sendRequests(url, requests);
         } catch (IOException ex) {
             Logger.getLogger(MapCacheTools.class.getName()).log(Level.SEVERE, null, ex);
@@ -662,5 +684,19 @@ public class MapCacheTools {
         }
 
         return response;
+    }
+
+    /**
+     * @return the debug
+     */
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * @param debug the debug to set
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }
