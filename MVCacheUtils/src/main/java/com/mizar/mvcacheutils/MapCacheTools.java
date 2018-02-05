@@ -542,6 +542,7 @@ public class MapCacheTools {
         PostMethod reqPost = null;
         PostMethod postMethod = null;
         if (debug) {
+            System.out.println(url);
             for (String request : requests) {
                 System.out.println(request);
             }
